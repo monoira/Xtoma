@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "unity": {
+      "type": "stdio",
+      "command": "/home/ira/.local/bin/unity",
+      "args": [
+        "mcp",
+        "--tool-groups"
+      ]
+    }
+  }
+}
