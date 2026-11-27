@@ -53,6 +53,8 @@ namespace JetpackJoe
             Hud.ShowTitle(BestKm);
             Hud.SetHearts(Hearts, false);
             Hud.FadeFromBlack(0.7f);
+            Hud.PauseRequested = Pause;
+            Hud.ResumeRequested = Resume;
             Hud.ToggleFullscreenRequested = ToggleFullscreen;
             Hud.ToggleMusicRequested = () => ToggleMusicMute(false);
             Hud.ToggleSfxRequested = () => ToggleSfxMute(false);
@@ -74,7 +76,7 @@ namespace JetpackJoe
             switch (State)
             {
                 case GameState.Title:
-                    if (JumpPressed()) StartRun();
+                    if (GameInput.JumpPressed()) StartRun();
                     break;
 
                 case GameState.Playing:
@@ -82,16 +84,16 @@ namespace JetpackJoe
                     CurrentSpeed = BaseSpeed * Mathf.Lerp(1f, MaxSpeedMultiplier, Mathf.Clamp01(Elapsed / RampSeconds));
                     DistanceMeters += CurrentSpeed * Time.deltaTime;
                     Hud.UpdateStats(DistanceKm, CurrentSpeed / BaseSpeed);
-                    if (EscapePressed()) Pause();
+                    if (GameInput.EscapePressed()) Pause();
                     break;
 
                 case GameState.Paused:
-                    if (EscapePressed()) Resume();
-                    else if (RestartPressed()) Restart();
+                    if (GameInput.EscapePressed()) Resume();
+                    else if (GameInput.RestartKeyPressed()) Restart();
                     break;
 
                 case GameState.Dead:
-                    if (!restarting && Time.unscaledTime - diedAt > 0.65f && RestartPressed()) Restart();
+                    if (!restarting && Time.unscaledTime - diedAt > 0.65f && GameInput.RestartPressed()) Restart();
                     break;
             }
         }
@@ -266,24 +268,6 @@ namespace JetpackJoe
 
             gameCamera.transform.position = cameraHome;
             shakeRoutine = null;
-        }
-
-        static bool JumpPressed()
-        {
-            var keyboard = Keyboard.current;
-            return keyboard != null && (keyboard.spaceKey.wasPressedThisFrame || keyboard.upArrowKey.wasPressedThisFrame);
-        }
-
-        static bool RestartPressed()
-        {
-            var keyboard = Keyboard.current;
-            return keyboard != null && keyboard.rKey.wasPressedThisFrame;
-        }
-
-        static bool EscapePressed()
-        {
-            var keyboard = Keyboard.current;
-            return keyboard != null && keyboard.escapeKey.wasPressedThisFrame;
         }
     }
 }

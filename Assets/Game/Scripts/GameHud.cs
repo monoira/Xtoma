@@ -36,6 +36,8 @@ namespace JetpackJoe
         TextMeshProUGUI sfxValue;
         Coroutine pauseRoutine;
 
+        public System.Action PauseRequested;
+        public System.Action ResumeRequested;
         public System.Action ToggleFullscreenRequested;
         public System.Action ToggleMusicRequested;
         public System.Action ToggleSfxRequested;
@@ -176,10 +178,16 @@ namespace JetpackJoe
             hudRoot = FullScreen("HudRoot", transform);
             hudGroup = Group(hudRoot);
 
+            var pauseButton = UiButton("PauseButton", hudRoot, new Vector2(24f, -22f), new Vector2(72f, 72f),
+                out var pauseLabel, new Vector2(0f, 1f));
+            pauseLabel.text = "II";
+            pauseLabel.fontSize = 32f;
+            pauseButton.onClick.AddListener(() => PauseRequested?.Invoke());
+
             Text("DistanceLabel", hudRoot, "მანძილი", 25f, Palette.Overlay2, TextAlignmentOptions.Left,
-                new Vector2(0f, 1f), new Vector2(44f, -24f), new Vector2(400f, 32f));
+                new Vector2(0f, 1f), new Vector2(116f, -24f), new Vector2(400f, 32f));
             distanceValue = Text("DistanceValue", hudRoot, "0.00 კმ", 52f, Palette.Text,
-                TextAlignmentOptions.Left, new Vector2(0f, 1f), new Vector2(42f, -54f), new Vector2(620f, 66f));
+                TextAlignmentOptions.Left, new Vector2(0f, 1f), new Vector2(114f, -54f), new Vector2(620f, 66f));
 
             Text("HeartsLabel", hudRoot, "სიცოცხლის გულები", 25f, Palette.Overlay2, TextAlignmentOptions.Right,
                 new Vector2(1f, 1f), new Vector2(-40f, -26f), new Vector2(260f, 32f));
@@ -219,7 +227,7 @@ namespace JetpackJoe
             hintBg.color = Palette.A(Palette.Crust, 0.82f);
             hintBg.raycastTarget = false;
             hintGroup = Group(hintBg);
-            Text("Hint", hintRoot, "SPACE ან ზედა ისარი -> ნახტომი", 24f, Palette.Subtext1,
+            Text("Hint", hintRoot, "დააჭირე ეკრანს ან SPACE -> ნახტომი", 24f, Palette.Subtext1,
                 TextAlignmentOptions.Center, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(840f, 40f));
         }
 
@@ -237,7 +245,7 @@ namespace JetpackJoe
             Text("Subtitle", titleRoot, "იხტუნავე", 30f, Palette.Subtext1,
                 TextAlignmentOptions.Center, new Vector2(0.5f, 0.5f), new Vector2(0f, 62f), new Vector2(900f, 44f));
 
-            var prompt = Text("Prompt", titleRoot, "დასაწყებად დააჭირე SPACE-ს ან ️ზედა ისარს", 32f,
+            var prompt = Text("Prompt", titleRoot, "დასაწყებად დააჭირე ეკრანს ან SPACE-ს", 32f,
                 Palette.Text, TextAlignmentOptions.Center, new Vector2(0.5f, 0.5f), new Vector2(0f, -10f),
                 new Vector2(900f, 48f));
             promptGroup = Group(prompt);
@@ -257,32 +265,41 @@ namespace JetpackJoe
             var scrim = FullScreen("Scrim", pauseRoot).gameObject.AddComponent<Image>();
             scrim.color = Palette.A(Palette.Crust, 0.72f);
             pauseGroup = Group(pauseRoot);
-            Panel("PausePanel", pauseRoot, Vector2.zero, new Vector2(620f, 560f), Palette.A(Palette.Mantle, 0.97f));
+            Panel("PausePanel", pauseRoot, Vector2.zero, new Vector2(620f, 640f), Palette.A(Palette.Mantle, 0.97f));
 
             Text("PauseTitle", pauseRoot, "პაუზა", 56f, Palette.Blue, TextAlignmentOptions.Center,
-                new Vector2(0.5f, 0.5f), new Vector2(0f, 200f), new Vector2(560f, 84f), true, true);
-            Block("PauseAccent", pauseRoot, new Vector2(0.5f, 0.5f), new Vector2(0f, 150f), new Vector2(120f, 4f),
+                new Vector2(0.5f, 0.5f), new Vector2(0f, 240f), new Vector2(560f, 84f), true, true);
+            Block("PauseAccent", pauseRoot, new Vector2(0.5f, 0.5f), new Vector2(0f, 190f), new Vector2(120f, 4f),
                 Palette.Blue);
 
+            var resumeButton = UiButton("ResumeButton", pauseRoot, new Vector2(0f, 130f), new Vector2(500f, 66f),
+                out var resumeLabel);
+            resumeLabel.text = "გაგრძელება";
+            resumeLabel.color = Palette.Green;
+            var resumeColors = resumeButton.colors;
+            resumeColors.highlightedColor = Palette.A(Palette.Green, 0.28f);
+            resumeButton.colors = resumeColors;
+            resumeButton.onClick.AddListener(() => ResumeRequested?.Invoke());
+
             Text("FullscreenLabel", pauseRoot, "სრული ეკრანი", 30f, Palette.Text, TextAlignmentOptions.Left,
-                new Vector2(0.5f, 0.5f), new Vector2(-160f, 78f), new Vector2(240f, 40f));
-            var fullscreenButton = UiButton("FullscreenButton", pauseRoot, new Vector2(160f, 78f),
+                new Vector2(0.5f, 0.5f), new Vector2(-160f, 50f), new Vector2(240f, 40f));
+            var fullscreenButton = UiButton("FullscreenButton", pauseRoot, new Vector2(160f, 50f),
                 new Vector2(240f, 64f), out fullscreenValue);
             fullscreenButton.onClick.AddListener(() => ToggleFullscreenRequested?.Invoke());
 
             Text("MusicLabel", pauseRoot, "მუსიკა", 30f, Palette.Text, TextAlignmentOptions.Left,
-                new Vector2(0.5f, 0.5f), new Vector2(-160f, 0f), new Vector2(240f, 40f));
-            var musicButton = UiButton("MusicButton", pauseRoot, new Vector2(160f, 0f), new Vector2(240f, 64f),
+                new Vector2(0.5f, 0.5f), new Vector2(-160f, -30f), new Vector2(240f, 40f));
+            var musicButton = UiButton("MusicButton", pauseRoot, new Vector2(160f, -30f), new Vector2(240f, 64f),
                 out musicValue);
             musicButton.onClick.AddListener(() => ToggleMusicRequested?.Invoke());
 
             Text("SfxLabel", pauseRoot, "ხმები", 30f, Palette.Text, TextAlignmentOptions.Left,
-                new Vector2(0.5f, 0.5f), new Vector2(-160f, -70f), new Vector2(240f, 40f));
-            var sfxButton = UiButton("SfxButton", pauseRoot, new Vector2(160f, -70f), new Vector2(240f, 64f),
+                new Vector2(0.5f, 0.5f), new Vector2(-160f, -110f), new Vector2(240f, 40f));
+            var sfxButton = UiButton("SfxButton", pauseRoot, new Vector2(160f, -110f), new Vector2(240f, 64f),
                 out sfxValue);
             sfxButton.onClick.AddListener(() => ToggleSfxRequested?.Invoke());
 
-            var exitButton = UiButton("ExitButton", pauseRoot, new Vector2(0f, -150f), new Vector2(500f, 72f),
+            var exitButton = UiButton("ExitButton", pauseRoot, new Vector2(0f, -195f), new Vector2(500f, 72f),
                 out var exitLabel);
             exitLabel.text = "გასვლა";
             exitLabel.color = Palette.Red;
@@ -292,14 +309,16 @@ namespace JetpackJoe
             exitButton.onClick.AddListener(() => ExitRequested?.Invoke());
 
             Text("PauseHint", pauseRoot, "ESC -> გაგრძელება · R -> თავიდან დაწყება", 23f, Palette.Overlay1,
-                TextAlignmentOptions.Center, new Vector2(0.5f, 0.5f), new Vector2(0f, -230f), new Vector2(560f, 34f));
+                TextAlignmentOptions.Center, new Vector2(0.5f, 0.5f), new Vector2(0f, -280f), new Vector2(560f, 34f));
             pauseRoot.gameObject.SetActive(false);
             SetSettings(Screen.fullScreen, true, true);
         }
 
-        Button UiButton(string name, Transform parent, Vector2 position, Vector2 size, out TextMeshProUGUI label)
+        Button UiButton(string name, Transform parent, Vector2 position, Vector2 size, out TextMeshProUGUI label,
+            Vector2? anchor = null)
         {
-            var rect = Rect(name, parent, new Vector2(0.5f, 0.5f), position, size, new Vector2(0.5f, 0.5f));
+            var pivot = anchor ?? new Vector2(0.5f, 0.5f);
+            var rect = Rect(name, parent, pivot, position, size, pivot);
             var image = rect.gameObject.AddComponent<Image>();
             image.sprite = GameArt.RoundedPanel;
             image.type = Image.Type.Sliced;
@@ -361,7 +380,7 @@ namespace JetpackJoe
                 TextAlignmentOptions.Center, new Vector2(0.5f, 0.5f), new Vector2(0f, -64f), new Vector2(800f, 40f));
             deadRecord = Text("DeadRecord", deadRoot, "ახალი რეკორდი!", 32f, Palette.Yellow,
                 TextAlignmentOptions.Center, new Vector2(0.5f, 0.5f), new Vector2(0f, -110f), new Vector2(800f, 40f));
-            var prompt = Text("DeadPrompt", deadRoot, "R -> თავიდან დაწყება", 30f, Palette.Text,
+            var prompt = Text("DeadPrompt", deadRoot, "დააჭირე ეკრანს ან R -> თავიდან დაწყება", 30f, Palette.Text,
                 TextAlignmentOptions.Center, new Vector2(0.5f, 0.5f), new Vector2(0f, -180f), new Vector2(800f, 44f));
             deadPromptGroup = Group(prompt);
             StartCoroutine(Pulse(deadPromptGroup, 2.2f, 0.4f, 1f));

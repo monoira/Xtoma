@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace JetpackJoe
 {
@@ -225,9 +224,7 @@ namespace JetpackJoe
 
         bool JumpPressed()
         {
-            var keyboard = Keyboard.current;
-            if (keyboard == null) return false;
-            return keyboard.spaceKey.wasPressedThisFrame || keyboard.upArrowKey.wasPressedThisFrame;
+            return GameInput.JumpPressed();
         }
 
         bool IsGrounded()

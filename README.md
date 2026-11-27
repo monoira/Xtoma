@@ -9,11 +9,14 @@ https://monoira.github.io/Xtoma/
 
 ## building and deploying
 
+NOTE: requires unity installed and to be signed into Github through gh
+
 ### build
 
 builds each platform into Builds/
 
 ```bash
+rm -rf Builds/
 unity build --target StandaloneLinux64  -o Builds/linux/Xtoma.x86_64
 unity build --target StandaloneWindows64 -o Builds/windows/Xtoma.exe
 unity build --profile "Web - Mobile - Release" -o Builds/web
@@ -28,7 +31,7 @@ zips the desktop builds and creates a github release
 cd Builds
 zip -qr Xtoma-linux.zip linux -x "linux/Xtoma_BackUpThisFolder*"
 zip -qr Xtoma-windows.zip windows -x "windows/Xtoma_BackUpThisFolder*"
-gh release create v1.3.0 --notes "Play online: https://monoira.github.io/Xtoma/" Xtoma-linux.zip Xtoma-windows.zip android/Xtoma.apk
+gh release create v1.4.0 --notes "Play online: https://monoira.github.io/Xtoma/" Xtoma-linux.zip Xtoma-windows.zip android/Xtoma.apk
 ```
 
 ### web
