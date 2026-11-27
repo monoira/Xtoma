@@ -54,9 +54,10 @@ namespace JetpackJoe
             Hud.SetHearts(Hearts, false);
             Hud.FadeFromBlack(0.7f);
             Hud.ToggleFullscreenRequested = ToggleFullscreen;
-            Hud.ToggleVolumeRequested = () => ToggleMute(false);
+            Hud.ToggleMusicRequested = () => ToggleMusicMute(false);
+            Hud.ToggleSfxRequested = () => ToggleSfxMute(false);
             Hud.ExitRequested = QuitGame;
-            Hud.SetSettings(Screen.fullScreen, !Audio.Muted);
+            UpdateSettings();
         }
 
         public static void ApplySavedDisplaySettings()
@@ -165,7 +166,7 @@ namespace JetpackJoe
             State = GameState.Paused;
             Time.timeScale = 0f;
             Audio.SetPaused(true);
-            Hud.SetSettings(Screen.fullScreen, !Audio.Muted);
+            UpdateSettings();
             Hud.ShowPaused(true);
         }
 
@@ -197,8 +198,22 @@ namespace JetpackJoe
         void ToggleMute(bool showToast = true)
         {
             bool muted = Audio.ToggleMute();
-            Hud.SetSettings(Screen.fullScreen, !muted);
+            UpdateSettings();
             if (showToast) Hud.Toast(muted ? "ხმა გამორთულია" : "ხმა ჩართულია");
+        }
+
+        void ToggleMusicMute(bool showToast = true)
+        {
+            bool muted = Audio.ToggleMusicMute();
+            UpdateSettings();
+            if (showToast) Hud.Toast(muted ? "მუსიკა გამორთულია" : "მუსიკა ჩართულია");
+        }
+
+        void ToggleSfxMute(bool showToast = true)
+        {
+            bool muted = Audio.ToggleSfxMute();
+            UpdateSettings();
+            if (showToast) Hud.Toast(muted ? "ხმები გამორთულია" : "ხმები ჩართულია");
         }
 
         void ToggleFullscreen()
@@ -206,7 +221,12 @@ namespace JetpackJoe
             Screen.fullScreen = !Screen.fullScreen;
             PlayerPrefs.SetInt(FullscreenKey, Screen.fullScreen ? 1 : 0);
             PlayerPrefs.Save();
-            Hud.SetSettings(Screen.fullScreen, !Audio.Muted);
+            UpdateSettings();
+        }
+
+        void UpdateSettings()
+        {
+            Hud.SetSettings(Screen.fullScreen, !Audio.MusicMuted, !Audio.SfxMuted);
         }
 
         void QuitGame()

@@ -344,8 +344,9 @@ namespace JetpackJoe
 
         void UpdateFlicker()
         {
-            if (invulnerableUntil <= 0f)
+            if (Time.time >= invulnerableUntil)
             {
+                invulnerableUntil = 0f;
                 for (int i = 0; i < bodyParts.Length; i++) bodyParts[i].enabled = true;
                 return;
             }

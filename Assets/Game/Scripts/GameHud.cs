@@ -32,11 +32,13 @@ namespace JetpackJoe
         RectTransform pauseRoot;
         CanvasGroup pauseGroup;
         TextMeshProUGUI fullscreenValue;
-        TextMeshProUGUI volumeValue;
+        TextMeshProUGUI musicValue;
+        TextMeshProUGUI sfxValue;
         Coroutine pauseRoutine;
 
         public System.Action ToggleFullscreenRequested;
-        public System.Action ToggleVolumeRequested;
+        public System.Action ToggleMusicRequested;
+        public System.Action ToggleSfxRequested;
         public System.Action ExitRequested;
 
         RectTransform deadRoot;
@@ -268,13 +270,19 @@ namespace JetpackJoe
                 new Vector2(240f, 64f), out fullscreenValue);
             fullscreenButton.onClick.AddListener(() => ToggleFullscreenRequested?.Invoke());
 
-            Text("VolumeLabel", pauseRoot, "ხმა", 30f, Palette.Text, TextAlignmentOptions.Left,
+            Text("MusicLabel", pauseRoot, "მუსიკა", 30f, Palette.Text, TextAlignmentOptions.Left,
                 new Vector2(0.5f, 0.5f), new Vector2(-160f, 0f), new Vector2(240f, 40f));
-            var volumeButton = UiButton("VolumeButton", pauseRoot, new Vector2(160f, 0f), new Vector2(240f, 64f),
-                out volumeValue);
-            volumeButton.onClick.AddListener(() => ToggleVolumeRequested?.Invoke());
+            var musicButton = UiButton("MusicButton", pauseRoot, new Vector2(160f, 0f), new Vector2(240f, 64f),
+                out musicValue);
+            musicButton.onClick.AddListener(() => ToggleMusicRequested?.Invoke());
 
-            var exitButton = UiButton("ExitButton", pauseRoot, new Vector2(0f, -96f), new Vector2(500f, 72f),
+            Text("SfxLabel", pauseRoot, "ხმები", 30f, Palette.Text, TextAlignmentOptions.Left,
+                new Vector2(0.5f, 0.5f), new Vector2(-160f, -70f), new Vector2(240f, 40f));
+            var sfxButton = UiButton("SfxButton", pauseRoot, new Vector2(160f, -70f), new Vector2(240f, 64f),
+                out sfxValue);
+            sfxButton.onClick.AddListener(() => ToggleSfxRequested?.Invoke());
+
+            var exitButton = UiButton("ExitButton", pauseRoot, new Vector2(0f, -150f), new Vector2(500f, 72f),
                 out var exitLabel);
             exitLabel.text = "გასვლა";
             exitLabel.color = Palette.Red;
@@ -284,9 +292,9 @@ namespace JetpackJoe
             exitButton.onClick.AddListener(() => ExitRequested?.Invoke());
 
             Text("PauseHint", pauseRoot, "ESC -> გაგრძელება · R -> თავიდან დაწყება", 23f, Palette.Overlay1,
-                TextAlignmentOptions.Center, new Vector2(0.5f, 0.5f), new Vector2(0f, -196f), new Vector2(560f, 34f));
+                TextAlignmentOptions.Center, new Vector2(0.5f, 0.5f), new Vector2(0f, -230f), new Vector2(560f, 34f));
             pauseRoot.gameObject.SetActive(false);
-            SetSettings(Screen.fullScreen, AudioListener.volume > 0f);
+            SetSettings(Screen.fullScreen, true, true);
         }
 
         Button UiButton(string name, Transform parent, Vector2 position, Vector2 size, out TextMeshProUGUI label)
@@ -314,12 +322,14 @@ namespace JetpackJoe
             return button;
         }
 
-        public void SetSettings(bool fullscreen, bool soundOn)
+        public void SetSettings(bool fullscreen, bool musicOn, bool sfxOn)
         {
             fullscreenValue.text = fullscreen ? "ჩართულია" : "გამორთულია";
             fullscreenValue.color = fullscreen ? Palette.Green : Palette.Overlay1;
-            volumeValue.text = soundOn ? "ჩართულია" : "გამორთულია";
-            volumeValue.color = soundOn ? Palette.Green : Palette.Overlay1;
+            musicValue.text = musicOn ? "ჩართულია" : "გამორთულია";
+            musicValue.color = musicOn ? Palette.Green : Palette.Overlay1;
+            sfxValue.text = sfxOn ? "ჩართულია" : "გამორთულია";
+            sfxValue.color = sfxOn ? Palette.Green : Palette.Overlay1;
         }
 
         static void EnsureEventSystem()

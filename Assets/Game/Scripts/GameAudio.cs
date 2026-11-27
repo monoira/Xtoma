@@ -6,7 +6,9 @@ namespace JetpackJoe
     public class GameAudio : MonoBehaviour
     {
         const int Rate = 44100;
-        const string MuteKey = "JetpackJoe.Muted";
+        const string LegacyMuteKey = "JetpackJoe.Muted";
+        const string MusicMuteKey = "JetpackJoe.MusicMuted";
+        const string SfxMuteKey = "JetpackJoe.SfxMuted";
 
         AudioSource musicSource;
         AudioSource sfxSource;
@@ -18,7 +20,9 @@ namespace JetpackJoe
         AudioClip startClip;
         AudioClip landClip;
 
-        public bool Muted { get; private set; }
+        public bool MusicMuted { get; private set; }
+        public bool SfxMuted { get; private set; }
+        public bool Muted => MusicMuted && SfxMuted;
 
         enum Wave { Sine, Triangle, Square, Noise }
 
@@ -46,8 +50,10 @@ namespace JetpackJoe
             musicSource.clip = BuildMusic();
             musicSource.Play();
 
-            Muted = PlayerPrefs.GetInt(MuteKey, 0) == 1;
-            AudioListener.volume = Muted ? 0f : 1f;
+            bool legacyMuted = PlayerPrefs.GetInt(LegacyMuteKey, 0) == 1;
+            MusicMuted = PlayerPrefs.GetInt(MusicMuteKey, legacyMuted ? 1 : 0) == 1;
+            SfxMuted = PlayerPrefs.GetInt(SfxMuteKey, legacyMuted ? 1 : 0) == 1;
+            ApplyMutes();
         }
 
         public void PlayJump()
@@ -90,13 +96,46 @@ namespace JetpackJoe
             if (musicSource != null) musicSource.volume = paused ? 0.1f : 0.26f;
         }
 
+        public bool ToggleMusicMute()
+        {
+            SetMusicMuted(!MusicMuted);
+            return MusicMuted;
+        }
+
+        public bool ToggleSfxMute()
+        {
+            SetSfxMuted(!SfxMuted);
+            return SfxMuted;
+        }
+
         public bool ToggleMute()
         {
-            Muted = !Muted;
-            AudioListener.volume = Muted ? 0f : 1f;
-            PlayerPrefs.SetInt(MuteKey, Muted ? 1 : 0);
+            bool mute = !(MusicMuted && SfxMuted);
+            SetMusicMuted(mute);
+            SetSfxMuted(mute);
+            return mute;
+        }
+
+        void SetMusicMuted(bool muted)
+        {
+            MusicMuted = muted;
+            PlayerPrefs.SetInt(MusicMuteKey, muted ? 1 : 0);
             PlayerPrefs.Save();
-            return Muted;
+            ApplyMutes();
+        }
+
+        void SetSfxMuted(bool muted)
+        {
+            SfxMuted = muted;
+            PlayerPrefs.SetInt(SfxMuteKey, muted ? 1 : 0);
+            PlayerPrefs.Save();
+            ApplyMutes();
+        }
+
+        void ApplyMutes()
+        {
+            musicSource.mute = MusicMuted;
+            sfxSource.mute = SfxMuted;
         }
 
         static AudioClip Clip(string name, float[] samples)
