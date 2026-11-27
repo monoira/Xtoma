@@ -7,6 +7,7 @@ namespace JetpackJoe
     {
         void Awake()
         {
+            PlatformConfig.ApplyDisplaySettings();
             Time.timeScale = 1f;
             GameManager.ApplySavedDisplaySettings();
 
@@ -24,6 +25,8 @@ namespace JetpackJoe
             camera.transform.position = new Vector3(0f, 0f, -10f);
             camera.clearFlags = CameraClearFlags.SolidColor;
             camera.backgroundColor = Palette.Base;
+            // no post-processing and only unlit sprites, so HDR would just cost mobile bandwidth
+            camera.allowHDR = false;
             camera.nearClipPlane = 0.1f;
             camera.farClipPlane = 100f;
 

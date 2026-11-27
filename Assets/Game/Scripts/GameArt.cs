@@ -16,6 +16,9 @@ namespace JetpackJoe
         static Sprite spikes;
         static Sprite pillar;
         static Sprite laser;
+        static Sprite laserCore;
+        static Sprite laserEmitter;
+        static Sprite laserEmitterLight;
         static Sprite orb;
         static Sprite orbGold;
         static Sprite moon;
@@ -52,6 +55,12 @@ namespace JetpackJoe
         public static Sprite Spikes => spikes != null ? spikes : spikes = MakeSpikes(3);
         public static Sprite Pillar => pillar != null ? pillar : pillar = MakePillar();
         public static Sprite Laser => laser != null ? laser : laser = MakeLaser();
+        public static Sprite LaserCore => laserCore != null ? laserCore : laserCore =
+            RoundedRect(512, 8, 4, Color.white);
+        public static Sprite LaserEmitter => laserEmitter != null ? laserEmitter : laserEmitter =
+            RoundedRect(18, 64, 6, Palette.Surface1);
+        public static Sprite LaserEmitterLight => laserEmitterLight != null ? laserEmitterLight : laserEmitterLight =
+            Circle(16, Color.white);
         public static Sprite Orb => orb != null ? orb : orb =
             MakeOrb("Orb", Palette.Red, Palette.Rosewater, Palette.Flamingo);
         public static Sprite OrbGold => orbGold != null ? orbGold : orbGold =

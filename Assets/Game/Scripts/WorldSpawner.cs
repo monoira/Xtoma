@@ -204,16 +204,15 @@ namespace JetpackJoe
                 Vector3.zero, new Vector3(4.7f, 0.8f, 1f));
             GameArt.NewSprite(hazard.transform, "LaserArt", GameArt.Laser, Color.white, 10, Vector3.zero,
                 new Vector3(0.88f, 1f, 1f));
-            GameArt.NewSprite(hazard.transform, "LaserCore",
-                GameArt.RoundedRect(512, 8, 4, Color.white), Palette.Rosewater, 12, Vector3.zero,
-                new Vector3(0.88f, 1.5f, 1f));
-            GameArt.NewSprite(hazard.transform, "EmitterL", GameArt.RoundedRect(18, 64, 6, Palette.Surface1),
+            GameArt.NewSprite(hazard.transform, "LaserCore", GameArt.LaserCore, Palette.Rosewater, 12,
+                Vector3.zero, new Vector3(0.88f, 1.5f, 1f));
+            GameArt.NewSprite(hazard.transform, "EmitterL", GameArt.LaserEmitter,
                 Palette.Surface1, 11, new Vector3(-2.27f, 0f, 0f), new Vector3(1f, 1f, 1f));
-            GameArt.NewSprite(hazard.transform, "EmitterR", GameArt.RoundedRect(18, 64, 6, Palette.Surface1),
+            GameArt.NewSprite(hazard.transform, "EmitterR", GameArt.LaserEmitter,
                 Palette.Surface1, 11, new Vector3(2.27f, 0f, 0f), new Vector3(1f, 1f, 1f));
-            GameArt.NewSprite(hazard.transform, "EmitterLightL", GameArt.Circle(16, Color.white), Palette.Yellow,
+            GameArt.NewSprite(hazard.transform, "EmitterLightL", GameArt.LaserEmitterLight, Palette.Yellow,
                 12, new Vector3(-2.16f, 0f, 0f), new Vector3(0.3f, 0.3f, 1f));
-            GameArt.NewSprite(hazard.transform, "EmitterLightR", GameArt.Circle(16, Color.white), Palette.Yellow,
+            GameArt.NewSprite(hazard.transform, "EmitterLightR", GameArt.LaserEmitterLight, Palette.Yellow,
                 12, new Vector3(2.16f, 0f, 0f), new Vector3(0.3f, 0.3f, 1f));
             var collider = hazard.AddComponent<BoxCollider2D>();
             collider.isTrigger = true;
