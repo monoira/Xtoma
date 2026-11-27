@@ -28,7 +28,7 @@ zips the desktop builds and creates a github release
 cd Builds
 zip -qr Xtoma-linux.zip linux -x "linux/Xtoma_BackUpThisFolder*"
 zip -qr Xtoma-windows.zip windows -x "windows/Xtoma_BackUpThisFolder*"
-gh release create v1.2.0 --notes "Play online: https://monoira.github.io/Xtoma/" Xtoma-linux.zip Xtoma-windows.zip android/Xtoma.apk
+gh release create v1.3.0 --notes "Play online: https://monoira.github.io/Xtoma/" Xtoma-linux.zip Xtoma-windows.zip android/Xtoma.apk
 ```
 
 ### web
@@ -36,6 +36,7 @@ gh release create v1.2.0 --notes "Play online: https://monoira.github.io/Xtoma/"
 deploys the web build to github pages
 
 ```bash
+cd "$(git rev-parse --show-toplevel)"
 TMP=$(mktemp -d)
 git -C "$TMP" init -q -b gh-pages
 cp -a Builds/web/. "$TMP/"
